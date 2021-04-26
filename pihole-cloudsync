@@ -40,6 +40,10 @@ ad_list='adlist.csv'
 custom_list='custom.list'
 domain_list='domainlist.csv'
 cname_list='05-pihole-custom-cname.conf'
+client_list='clientlist.csv'
+group_list='grouplist.csv'
+clientByGroup_list='clientbygrouplist.csv'
+domainByGroup_list='domainbygrouplist.csv'
 ###########################################################################
 # SHOULDN'T NEED TO EDIT BELOW THIS LINE
 
@@ -68,6 +72,10 @@ push_initialize () {
 	# Export Ad and Domain lists from Gravity database
 	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM adlist" >$ad_list
 	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM domainlist" >$domain_list
+	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM client" >$client_list
+	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM group" >$group_list
+	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM client_by_group" >$clientByGroup_list
+	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM domainlist_by_group" >$domainByGroup_list
 
 	# Add all lists to local Git repo
 	$SUDO git add .
@@ -96,6 +104,14 @@ pull_initialize () {
 	$SUDO sqlite3 $gravity_db -header -csv ".import adlist.csv adlist"
 	$SUDO sqlite3 $gravity_db "DROP TABLE domainlist;"
 	$SUDO sqlite3 $gravity_db -header -csv ".import domainlist.csv domainlist"
+	$SUDO sqlite3 $gravity_db "DROP TABLE client;"
+	$SUDO sqlite3 $gravity_db -header -csv ".import clientlist.csv client"
+	$SUDO sqlite3 $gravity_db "DROP TABLE group;"
+	$SUDO sqlite3 $gravity_db -header -csv ".import grouplist.csv group"
+	$SUDO sqlite3 $gravity_db "DROP TABLE client_by_group;"
+	$SUDO sqlite3 $gravity_db -header -csv ".import clientbygrouplist.csv client_by_group"
+	$SUDO sqlite3 $gravity_db "DROP TABLE domainlist_by_group;"
+	$SUDO sqlite3 $gravity_db -header -csv ".import domainbygrouplist.csv domainlist_by_group"
 
 	# Restart Pi-hole to pick up changes
 	$SUDO pihole -g
@@ -118,6 +134,10 @@ push () {
         # Export Ad and Domain lists from Gravity database
         $SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM adlist" >$ad_list
         $SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM domainlist" >$domain_list
+	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM client" >$client_list
+	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM group" >$group_list
+	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM client_by_group" >$clientByGroup_list
+	$SUDO sqlite3 $gravity_db -header -csv "SELECT * FROM domainlist_by_group" >$domainByGroup_list
 
 	# Compare local files to remote Git repo
 	$SUDO git remote update > /dev/null
@@ -157,6 +177,14 @@ pull () {
                 $SUDO sqlite3 $gravity_db -header -csv ".import adlist.csv adlist"
                 $SUDO sqlite3 $gravity_db "DROP TABLE domainlist;"
                 $SUDO sqlite3 $gravity_db -header -csv ".import domainlist.csv domainlist"
+		$SUDO sqlite3 $gravity_db "DROP TABLE client;"
+		$SUDO sqlite3 $gravity_db -header -csv ".import clientlist.csv client"
+		$SUDO sqlite3 $gravity_db "DROP TABLE group;"
+		$SUDO sqlite3 $gravity_db -header -csv ".import grouplist.csv group"
+		$SUDO sqlite3 $gravity_db "DROP TABLE client_by_group;"
+		$SUDO sqlite3 $gravity_db -header -csv ".import clientbygrouplist.csv client_by_group"
+		$SUDO sqlite3 $gravity_db "DROP TABLE domainlist_by_group;"
+		$SUDO sqlite3 $gravity_db -header -csv ".import domainbygrouplist.csv domainlist_by_group"
 		$SUDO pihole -g
                 echo 'Done!';
                 exit 0
