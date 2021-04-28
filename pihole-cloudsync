@@ -181,7 +181,7 @@ pull () {
                 $SUDO sqlite3 $gravity_db -header -csv ".import domainlist.csv domainlist"
 		$SUDO sqlite3 $gravity_db "DROP TABLE client;"
 		$SUDO sqlite3 $gravity_db -header -csv ".import clientlist.csv client"
-		$SUDO sqlite3 $gravity_db "DROP TABLE group;"
+		$SUDO sqlite3 $gravity_db "DROP TABLE 'group';"
 		$SUDO sqlite3 $gravity_db "DROP TABLE 'group2';"
 		$SUDO sqlite3 $gravity_db -header -csv ".import grouplist.csv group2"
 		$SUDO sqlite3 $gravity_db "ALTER TABLE 'group2' RENAME TO 'group';"
